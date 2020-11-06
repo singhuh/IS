@@ -1,0 +1,77 @@
+﻿@model IEnumerable<IS.Models.Interview>
+
+@{
+	ViewBag.Title = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Interview List</h2>
+
+<p>
+	@Html.ActionLink("Add", "Create", routeValues: null, htmlAttributes: new { @class = "btn btn-danger btn-justified ", @role = "button" })
+</p>
+<hr />
+<p>
+	@using (Html.BeginForm("Index", "Interviews", FormMethod.Get))
+	{
+		<div class="w3-container">
+			<div class="w3-padding w3-large w3-black">
+				<i class="fa fa-search" aria-hidden="false"></i>
+				<strong>Search By  </strong>
+
+				@Html.RadioButton("searchBy", "InterviewCompany", true) <text>  Company Name    </text>
+				@Html.RadioButton("searchBy", "MNumber") <text>  M#</text>
+				<br />
+			</div>
+			@Html.TextBox("search")<input type="submit" value="Search"  />
+		</div>
+	}
+</p>
+
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.InterviewCompany)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.InterviewDate)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.Offer)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.StudentAlum.LastName)
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.StudentAlum.MNumber)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.InterviewCompany)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.InterviewDate)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Offer)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.StudentAlum.LastName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.StudentAlum.MNumber)
+			</td>
+			<td>
+				@Html.ActionLink("Edit", "Edit", new { id = item.InterviewId }) |
+				@Html.ActionLink("Details", "Details", new { id = item.InterviewId }) |
+				@Html.ActionLink("Delete", "Delete", new { id = item.InterviewId })
+			</td>
+		</tr>
+	}
+
+</table>
