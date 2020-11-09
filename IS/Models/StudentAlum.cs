@@ -22,17 +22,29 @@ namespace IS.Models
             this.WorkHistories = new HashSet<WorkHistory>();
         }
         [Display(Name = "M#")]
+        [RegularExpression(@"^M{1}\d{8}$", ErrorMessage = "Must be valid a M#")]
+        [Required(ErrorMessage = "Please provide M#")]
+        [StringLength(9, ErrorMessage = "9 characters only")]
         public string MNumber { get; set; }
         [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Please provide Last Name")]
+        [StringLength(50, ErrorMessage = "50 characters only")]
         public string LastName { get; set; }
         [Display(Name = "First Name")]
+        [StringLength(50, ErrorMessage = "50 characters only")]
         public string FirstName { get; set; }
+        [StringLength(6, ErrorMessage = "6 characters only")]
         public string Gender { get; set; }
+        [Required(ErrorMessage = "Please provide Email")]
+        [EmailAddress(ErrorMessage ="Incorrect format")]
         public string Email { get; set; }
         [Display(Name = "Admit Year")]
+        [Required(ErrorMessage = "Please provide Admit Year")]
         public short AdmitYear { get; set; }
         [Display(Name = "Graduation Year")]
+        [CustomValidation(typeof(StudentAlum), "GraduationYearInFuture")]
         public Nullable<short> GraduationYear { get; set; }
+        [StringLength(15, ErrorMessage = "15 characters only")]
         public string Country { get; set; }
         public string LinkedIn { get; set; }
         public string Photo { get; set; }
@@ -41,5 +53,20 @@ namespace IS.Models
         public virtual ICollection<Interview> Interviews { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkHistory> WorkHistories { get; set; }
+
+
+        public static ValidationResult GraduationYearInFuture(short? gradYear, ValidationContext context)
+        {
+            if (gradYear == null)
+            {
+                return ValidationResult.Success;
+            }
+            var instance = context.ObjectInstance as StudentAlum;
+            if (gradYear > instance.AdmitYear)
+            {
+                return ValidationResult.Success;
+            }
+            return new ValidationResult("Graduation Year must be after Admit Year");
+        }
     }
 }

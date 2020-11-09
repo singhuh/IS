@@ -17,20 +17,31 @@ namespace IS.Models
     {
         public int WorkHistoryId { get; set; }
         [Display(Name = "M#")]
+        [RegularExpression(@"^M{1}\d{8}$", ErrorMessage = "Must be valid a M#")]
+        [Required(ErrorMessage = "Please provide M#")]
+        [StringLength(9, ErrorMessage = "9 characters only")]
         public string MNumber { get; set; }
         [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Please provide Last Name")]
+        [StringLength(50, ErrorMessage = "50 characters only")]
         public string LastName { get; set; }
         [Display(Name = "Company ID")]
         public int CompanyId { get; set; }
         [Display(Name = "Company Name")]
+        [Required(ErrorMessage = "Please provide Company Name")]
+        [StringLength(50, ErrorMessage = "50 characters only")]
         public string CompanyName { get; set; }
         [Display(Name = "Title ID")]
         public Nullable<int> TitleId { get; set; }
         [Display(Name = "Job Title")]
+        [Required(ErrorMessage = "Please provide Job Title")]
+        [StringLength(50, ErrorMessage = "50 characters only")]
         public string TitleName { get; set; }
         [Display(Name = "Start Date")]
+        [Required(ErrorMessage = "Please provide Start Date")]
         public System.DateTime StartDate { get; set; }
         [Display(Name = "End Date")]
+        [CustomValidation(typeof(WorkHistory), "EndDateInFuture")]
         public Nullable<System.DateTime> EndDate { get; set; }
         public Nullable<decimal> FTE { get; set; }
         public Nullable<int> Compensation { get; set; }
@@ -38,5 +49,20 @@ namespace IS.Models
         public virtual Company Company { get; set; }
         public virtual StudentAlum StudentAlum { get; set; }
         public virtual Title Title { get; set; }
+
+        public static ValidationResult EndDateInFuture(DateTime? endDate, ValidationContext context)
+        {
+            if (endDate == null)
+            {
+                return ValidationResult.Success;
+            }
+            var instance = context.ObjectInstance as WorkHistory;
+            if (endDate > instance.StartDate)
+            {
+                return ValidationResult.Success;
+            }
+            return new ValidationResult("End date must be after Start date");
+        }
     }
 }
+

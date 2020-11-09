@@ -23,6 +23,8 @@ namespace IS.Models
     
         public int TitleId { get; set; }
         [Display(Name = "Job Title")]
+        [Required(ErrorMessage = "Please provide Job Title")]
+        [StringLength(50, ErrorMessage = "50 characters only")]
         public string TitleName { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
